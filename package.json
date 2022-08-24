@@ -1,0 +1,23 @@
+{
+  "name": "my-server-is-on",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tothandras2019/my-server-is-on.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tothandras2019/my-server-is-on/issues"
+  },
+  "homepage": "https://github.com/tothandras2019/my-server-is-on#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
