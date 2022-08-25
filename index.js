@@ -1,11 +1,17 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 const fs = require("fs");
+const bodyParser = require("body-parser");
 const port = 3000;
 
-app.post("/", (req, res) => {}); //TODO
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get("/api/status/active", (req, res) => {
+app.use("/public", express.static(__dirname + `/public`));
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, `/public/index.html`)));
+
+app.get("/api/status/active", async (req, res) => {
   const file = __dirname + "/data/students.json";
   fs.readFile(file, (err, data) => {
     if (err) throw err;
@@ -33,10 +39,8 @@ app.get("/students/:id", (req, res) => {
       if (err) throw err;
       resData = await JSON.parse(data);
       result = resData.find((data) => data.id === Number.parseInt(req.params.id));
-
       res.send(result);
     });
-    //const sendpackage = data.forEach((user) => user.id === req.params.id);
   }
 });
 
@@ -50,7 +54,19 @@ app.get("/students/", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("<h1>Hello World! It's Codecool</h1>");
+  const indexPage = __dirname + "/public/index.html";
+  res.sendFile(indexPage);
+});
+
+app.post("/api/students", async (req, res) => {
+  const dat = req.body;
+
+  fs.readFile(__dirname + `/data/students.json`, `utf8`, (err, data) => {
+    if (err) throw err;
+    const allStudentList = JSON.parse(data);
+    const newStudent = `{ "id": ${allStudentList[allStudentList.length - 1].id + 1}, "name": "${dat.newStudent}", "status": true }`;
+    res.send({ success: true, msg: "student loaded successfully" });
+  });
 });
 
 app.listen(port, () => {
