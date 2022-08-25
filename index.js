@@ -74,7 +74,7 @@ app.post("/api/students", (req, res) => {
     fs.writeFile(__dirname + `/data/students.json`, JSON.stringify(allStudentList), option, (err) => {
       if (err) throw err;
     });
-    res.send({ success: true, msg: "student loaded successfully" });
+    res.send({ success: true, msg: "<li>student loaded successfully</li>" });
   });
 });
 
