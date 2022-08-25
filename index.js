@@ -11,7 +11,10 @@ app.use(bodyParser.json());
 app.use("/public", express.static(__dirname + `/public`));
 
 //Default page return
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, `/public/index.html`)));
+// app.get("/", (req, res) => res.sendFile(path.join(__dirname, `/public/index.html`)));
+app.get("/", (req, res) => {
+  res.send("<h1>Hello from Codecool NODEMON !</h1>");
+});
 
 app.get("/api/status/active", async (req, res) => {
   const file = __dirname + "/data/students.json";
@@ -35,12 +38,12 @@ app.get("/api/status/finished", (req, res) => {
 
 app.get("/students/:id", (req, res) => {
   if (req.params.id) {
-    const file = __dirname + "/data/students.json";
+    const file = path.join(__dirname + "/data/students.json");
     let resData = null;
-    fs.readFile(file, async (err, data) => {
+    fs.readFile(file, (err, data) => {
       if (err) throw err;
-      resData = await JSON.parse(data);
-      result = resData.find((data) => data.id === Number.parseInt(req.params.id));
+      resData = JSON.parse(data);
+      result = resData.find((data) => data.id === parseInt(req.params.id));
       res.send(result);
     });
   }
@@ -55,11 +58,6 @@ app.get("/students/", async (req, res) => {
   });
 });
 
-app.get("/", (req, res) => {
-  const indexPage = __dirname + "/public/index.html";
-  res.sendFile(indexPage);
-});
-
 app.post("/api/students", (req, res) => {
   const dat = req.body;
   let allStudentList = null;
@@ -72,9 +70,9 @@ app.post("/api/students", (req, res) => {
 
     const option = { encoding: "utf8", flag: "w" }; //Optionally
     fs.writeFile(__dirname + `/data/students.json`, JSON.stringify(allStudentList), option, (err) => {
-      if (err) throw err;
+      if (err) throw res.send({ success: false, msg: `<li>False data: ${err.message}</li>` });
     });
-    res.send({ success: true, msg: "<li>student loaded successfully</li>" });
+    res.send({ success: true, msg: "<li>New student loaded successfully</li>" });
   });
 });
 
